@@ -13,8 +13,9 @@ import {
   Settings,
   LogOut,
   ChevronLeft,
-  Sparkles,
-  Zap
+  Flame,
+  Trophy,
+  Crown
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -37,21 +38,21 @@ export function AppSidebar({ collapsed = false, onToggle }: AppSidebarProps) {
   return (
     <motion.aside
       initial={false}
-      animate={{ width: collapsed ? 80 : 280 }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
+      animate={{ width: collapsed ? 72 : 260 }}
+      transition={{ duration: 0.2, ease: "easeInOut" }}
       className="fixed left-0 top-0 h-screen bg-sidebar border-r border-sidebar-border flex flex-col z-50"
     >
       {/* Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-sidebar-border">
-        <Link href="/dashboard" className="flex items-center gap-3 overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0">
-            <Brain className="w-6 h-6 text-primary-foreground" />
+      <div className="h-14 flex items-center justify-between px-4 border-b border-sidebar-border">
+        <Link href="/dashboard" className="flex items-center gap-2.5 overflow-hidden">
+          <div className="w-9 h-9 rounded-lg bg-primary flex items-center justify-center shrink-0">
+            <Brain className="w-5 h-5 text-primary-foreground" />
           </div>
           {!collapsed && (
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-lg font-bold whitespace-nowrap"
+              className="font-bold whitespace-nowrap"
             >
               NeuroPath AI
             </motion.span>
@@ -59,31 +60,40 @@ export function AppSidebar({ collapsed = false, onToggle }: AppSidebarProps) {
         </Link>
         <button
           onClick={onToggle}
-          className="w-8 h-8 rounded-lg bg-sidebar-accent flex items-center justify-center hover:bg-sidebar-accent/80 transition-colors"
+          className="w-7 h-7 rounded-md bg-sidebar-accent flex items-center justify-center hover:bg-sidebar-accent/80 transition-colors"
         >
           <ChevronLeft className={cn("w-4 h-4 transition-transform", collapsed && "rotate-180")} />
         </button>
       </div>
 
-      {/* AI Status Card */}
+      {/* Stats Card */}
       {!collapsed && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-4 mt-4 p-4 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mx-3 mt-3 p-3 rounded-lg bg-secondary/50 border border-border"
         >
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">AI Insights Ready</span>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-1.5">
+              <Flame className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold">12</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Trophy className="w-4 h-4 text-warning" />
+              <span className="text-sm font-semibold">#247</span>
+            </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            3 new suggestions based on your progress
-          </p>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>114/454 solved</span>
+            <span className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
+              <div className="h-full w-[25%] bg-primary rounded-full" />
+            </span>
+          </div>
         </motion.div>
       )}
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+      <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
         {navigation.map((item) => {
           const isActive = pathname === item.href
           return (
@@ -91,57 +101,63 @@ export function AppSidebar({ collapsed = false, onToggle }: AppSidebarProps) {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-3 rounded-xl transition-all group relative",
+                "flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all relative group",
                 isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  ? "bg-primary text-primary-foreground"
                   : "text-sidebar-foreground hover:bg-sidebar-accent"
               )}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="activeNav"
-                  className="absolute inset-0 bg-sidebar-primary rounded-xl"
-                  transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                />
-              )}
-              <item.icon className={cn("w-5 h-5 shrink-0 relative z-10", isActive && "text-sidebar-primary-foreground")} />
+              <item.icon className="w-[18px] h-[18px] shrink-0" />
               {!collapsed && (
-                <span className="font-medium relative z-10">{item.name}</span>
+                <span className="text-sm font-medium">{item.name}</span>
+              )}
+              {collapsed && (
+                <div className="absolute left-full ml-2 px-2 py-1 bg-popover text-popover-foreground text-sm rounded-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg border border-border">
+                  {item.name}
+                </div>
               )}
             </Link>
           )
         })}
       </nav>
 
-      {/* Upgrade Card */}
+      {/* Pro Card */}
       {!collapsed && (
-        <div className="mx-4 mb-4 p-4 rounded-2xl bg-gradient-to-br from-accent/30 to-primary/30 border border-accent/30">
+        <div className="mx-3 mb-3 p-3 rounded-lg bg-primary/10 border border-primary/20">
           <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-accent" />
-            <span className="text-sm font-bold">Upgrade to Pro</span>
+            <Crown className="w-4 h-4 text-primary" />
+            <span className="text-sm font-semibold">Upgrade to Plus</span>
           </div>
-          <p className="text-xs text-muted-foreground mb-3">
-            Unlock unlimited AI tutoring sessions
+          <p className="text-xs text-muted-foreground mb-2">
+            Unlock all problems and AI features
           </p>
-          <button className="w-full py-2 px-4 rounded-lg bg-accent text-accent-foreground text-sm font-medium hover:opacity-90 transition-opacity">
+          <button className="w-full py-2 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors">
             Upgrade Now
           </button>
         </div>
       )}
 
       {/* Footer */}
-      <div className="border-t border-sidebar-border p-3 space-y-1">
+      <div className="border-t border-sidebar-border p-2 space-y-1">
         <Link
           href="/settings"
-          className="flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+          className={cn(
+            "flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-colors",
+            pathname === "/settings" 
+              ? "bg-sidebar-accent text-sidebar-accent-foreground" 
+              : "text-sidebar-foreground hover:bg-sidebar-accent"
+          )}
         >
-          <Settings className="w-5 h-5 shrink-0" />
-          {!collapsed && <span className="font-medium">Settings</span>}
+          <Settings className="w-[18px] h-[18px] shrink-0" />
+          {!collapsed && <span className="text-sm font-medium">Settings</span>}
         </Link>
-        <button className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sidebar-foreground hover:bg-sidebar-accent transition-colors">
-          <LogOut className="w-5 h-5 shrink-0" />
-          {!collapsed && <span className="font-medium">Sign Out</span>}
-        </button>
+        <Link
+          href="/"
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+        >
+          <LogOut className="w-[18px] h-[18px] shrink-0" />
+          {!collapsed && <span className="text-sm font-medium">Sign Out</span>}
+        </Link>
       </div>
     </motion.aside>
   )

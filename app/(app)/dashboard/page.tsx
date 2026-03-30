@@ -1,421 +1,509 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import {
-  Brain,
+  ChevronDown,
+  ChevronRight,
+  CheckCircle2,
+  Circle,
+  Clock,
   Flame,
   Target,
-  TrendingUp,
-  Clock,
-  BookOpen,
-  Code,
-  ArrowRight,
-  Sparkles,
-  AlertCircle,
-  CheckCircle2,
   Play,
-  Zap,
-  BarChart3
+  Shuffle,
+  Search,
+  Command,
+  BookOpen,
+  Video,
+  FileText,
+  ExternalLink,
+  Sparkles
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import Link from "next/link"
 
-const stats = [
-  {
-    label: "Current Streak",
-    value: "12",
-    unit: "days",
-    icon: Flame,
-    color: "from-orange-500 to-red-500",
-    change: "+3 from last week"
-  },
-  {
-    label: "Problems Solved",
-    value: "247",
-    unit: "total",
-    icon: Target,
-    color: "from-primary to-blue-400",
-    change: "+18 this week"
-  },
-  {
-    label: "Mastery Level",
-    value: "68",
-    unit: "%",
-    icon: TrendingUp,
-    color: "from-emerald-500 to-teal-500",
-    change: "+5% from last month"
-  },
-  {
-    label: "Study Time",
-    value: "4.5",
-    unit: "hrs/day",
-    icon: Clock,
-    color: "from-accent to-purple-400",
-    change: "Above average"
-  }
-]
-
-const masteryBars = [
-  { topic: "Arrays & Hashing", mastery: 85, color: "bg-emerald-500" },
-  { topic: "Two Pointers", mastery: 72, color: "bg-primary" },
-  { topic: "Sliding Window", mastery: 68, color: "bg-primary" },
-  { topic: "Stack", mastery: 55, color: "bg-yellow-500" },
-  { topic: "Binary Search", mastery: 45, color: "bg-orange-500" },
-  { topic: "Trees", mastery: 35, color: "bg-red-500" }
-]
-
-const continueItems = [
-  {
-    title: "Binary Search Trees",
-    subtitle: "Trees & Graphs",
-    progress: 65,
-    problems: "8/12 completed",
-    estimated: "30 min left"
-  }
-]
-
-const weakAreas = [
-  {
-    topic: "Recursion Base Cases",
-    insight: "You often miss edge cases in recursive solutions",
-    icon: AlertCircle,
-    severity: "high"
-  },
-  {
-    topic: "Time Complexity Analysis",
-    insight: "Practice analyzing nested loops",
-    icon: AlertCircle,
-    severity: "medium"
-  },
-  {
-    topic: "Tree Traversal",
-    insight: "Mix up pre-order and post-order patterns",
-    icon: AlertCircle,
-    severity: "medium"
-  }
-]
-
-const todaysTasks = [
+const dsaSheet = [
   {
     id: 1,
-    title: "Complete Binary Search Practice",
-    type: "Practice",
-    duration: "25 min",
-    difficulty: "Medium",
-    completed: true
+    title: "Learn the basics",
+    total: 31,
+    completed: 28,
+    problems: [
+      { title: "Things to Know in C++/Java/Python", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Time Complexity", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Space Complexity", difficulty: "Easy", status: "completed", article: true, video: false },
+      { title: "Basic Input/Output", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Pattern Problems", difficulty: "Easy", status: "in-progress", article: true, video: true }
+    ]
   },
   {
     id: 2,
-    title: "Review: Two Sum Patterns",
-    type: "Review",
-    duration: "15 min",
-    difficulty: "Easy",
-    completed: true
+    title: "Learn Important Sorting Techniques",
+    total: 7,
+    completed: 7,
+    problems: [
+      { title: "Selection Sort", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Bubble Sort", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Insertion Sort", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Merge Sort", difficulty: "Medium", status: "completed", article: true, video: true },
+      { title: "Quick Sort", difficulty: "Medium", status: "completed", article: true, video: true }
+    ]
   },
   {
     id: 3,
-    title: "Learn: BST Insertion & Deletion",
-    type: "Learn",
-    duration: "20 min",
-    difficulty: "Medium",
-    completed: false
+    title: "Solve Problems on Arrays [Easy -> Medium -> Hard]",
+    total: 40,
+    completed: 22,
+    problems: [
+      { title: "Largest Element in Array", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Second Largest Element", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Check if Array Is Sorted", difficulty: "Easy", status: "completed", article: true, video: false },
+      { title: "Remove Duplicates from Sorted Array", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Two Sum Problem", difficulty: "Medium", status: "in-progress", article: true, video: true }
+    ]
   },
   {
     id: 4,
-    title: "Solve: Validate BST",
-    type: "Practice",
-    duration: "30 min",
-    difficulty: "Medium",
-    completed: false
+    title: "Binary Search [1D, 2D Arrays, Search Space]",
+    total: 32,
+    completed: 15,
+    problems: [
+      { title: "Binary Search to find X in sorted array", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Lower Bound", difficulty: "Easy", status: "completed", article: true, video: true },
+      { title: "Upper Bound", difficulty: "Easy", status: "completed", article: true, video: false },
+      { title: "Search Insert Position", difficulty: "Easy", status: "in-progress", article: true, video: true },
+      { title: "Floor/Ceil in Sorted Array", difficulty: "Medium", status: "todo", article: true, video: true }
+    ]
   },
   {
     id: 5,
-    title: "Daily Challenge: LRU Cache",
-    type: "Challenge",
-    duration: "45 min",
-    difficulty: "Hard",
-    completed: false
-  }
-]
-
-const aiInsights = [
-  {
-    title: "Pattern Recognition",
-    message: "You excel at array manipulation but struggle with recursive thinking. Focus on breaking down problems into smaller subproblems.",
-    type: "insight"
+    title: "Strings [Basic and Medium]",
+    total: 15,
+    completed: 8,
+    problems: []
   },
   {
-    title: "Optimal Study Time",
-    message: "Your best problem-solving hours are 9-11 AM. Consider scheduling harder topics during this window.",
-    type: "recommendation"
+    id: 6,
+    title: "Learn LinkedList [Single LL, Double LL, Medium, Hard Problems]",
+    total: 31,
+    completed: 12,
+    problems: []
+  },
+  {
+    id: 7,
+    title: "Recursion [PatternWise]",
+    total: 25,
+    completed: 5,
+    problems: []
+  },
+  {
+    id: 8,
+    title: "Bit Manipulation [Concepts & Problems]",
+    total: 18,
+    completed: 3,
+    problems: []
+  },
+  {
+    id: 9,
+    title: "Stack and Queues [Learning, Pre-In-Post-fix, Monotonic Stack]",
+    total: 30,
+    completed: 8,
+    problems: []
+  },
+  {
+    id: 10,
+    title: "Sliding Window & Two Pointer Combined Problems",
+    total: 12,
+    completed: 4,
+    problems: []
+  },
+  {
+    id: 11,
+    title: "Heaps [Learning, Medium, Hard Problems]",
+    total: 17,
+    completed: 2,
+    problems: []
+  },
+  {
+    id: 12,
+    title: "Greedy Algorithms [Easy, Medium/Hard]",
+    total: 16,
+    completed: 0,
+    problems: []
+  },
+  {
+    id: 13,
+    title: "Binary Trees [Traversals, Medium and Hard Problems]",
+    total: 39,
+    completed: 0,
+    problems: []
+  },
+  {
+    id: 14,
+    title: "Binary Search Trees [Concept and Problems]",
+    total: 16,
+    completed: 0,
+    problems: []
+  },
+  {
+    id: 15,
+    title: "Graphs [Concepts & Problems]",
+    total: 53,
+    completed: 0,
+    problems: []
+  },
+  {
+    id: 16,
+    title: "Dynamic Programming [Patterns and Problems]",
+    total: 56,
+    completed: 0,
+    problems: []
+  },
+  {
+    id: 17,
+    title: "Tries",
+    total: 7,
+    completed: 0,
+    problems: []
+  },
+  {
+    id: 18,
+    title: "Advanced Strings",
+    total: 9,
+    completed: 0,
+    problems: []
   }
 ]
 
+const totalProblems = dsaSheet.reduce((acc, section) => acc + section.total, 0)
+const completedProblems = dsaSheet.reduce((acc, section) => acc + section.completed, 0)
+const progressPercentage = Math.round((completedProblems / totalProblems) * 100)
+
+const difficultyStats = {
+  easy: { total: 133, completed: 85 },
+  medium: { total: 184, completed: 28 },
+  hard: { total: 137, completed: 1 }
+}
+
 export default function DashboardPage() {
-  const completedTasks = todaysTasks.filter(t => t.completed).length
-  const totalTasks = todaysTasks.length
+  const [expandedSections, setExpandedSections] = useState<number[]>([1, 3])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showCommandPalette, setShowCommandPalette] = useState(false)
+
+  const toggleSection = (id: number) => {
+    setExpandedSections(prev => 
+      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
+    )
+  }
 
   return (
-    <div className="min-h-screen p-6 lg:p-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <h1 className="text-3xl font-bold mb-2">Welcome back, Alex</h1>
-        <p className="text-muted-foreground">
-          {"Here's"} your learning progress for today
-        </p>
-      </motion.div>
-
-      {/* Stats Grid */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8"
-      >
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.1 + index * 0.05 }}
-          >
-            <Card className="p-5 bg-card border-border/50 hover:border-border transition-colors">
-              <div className="flex items-start justify-between mb-4">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
-                  <stat.icon className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-xs text-muted-foreground">{stat.change}</span>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-bold">{stat.value}</span>
-                <span className="text-muted-foreground text-sm">{stat.unit}</span>
-              </div>
-              <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
-            </Card>
-          </motion.div>
-        ))}
-      </motion.div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* AI Insight Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="p-6 bg-gradient-to-br from-primary/10 via-card to-accent/10 border-primary/20 glow-blue">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-primary" />
-                </div>
-                <h3 className="font-semibold">AI Insights</h3>
-                <span className="ml-auto text-xs bg-primary/20 text-primary px-2 py-1 rounded-full">
-                  Updated 2h ago
-                </span>
-              </div>
-              <div className="space-y-4">
-                {aiInsights.map((insight, index) => (
-                  <div key={index} className="p-4 rounded-xl bg-background/50 border border-border/50">
-                    <h4 className="font-medium text-sm mb-1">{insight.title}</h4>
-                    <p className="text-sm text-muted-foreground">{insight.message}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </motion.div>
-
-          {/* Continue Learning */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-          >
-            <Card className="p-6 bg-card border-border/50">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-primary" />
-                  <h3 className="font-semibold">Continue Learning</h3>
-                </div>
-                <Link href="/learning" className="text-sm text-primary hover:underline">
-                  View all
-                </Link>
-              </div>
-              {continueItems.map((item, index) => (
-                <div key={index} className="p-5 rounded-2xl bg-secondary/30 border border-border/50">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <span className="text-xs text-primary bg-primary/10 px-2 py-1 rounded-full">
-                        {item.subtitle}
-                      </span>
-                      <h4 className="text-lg font-semibold mt-2">{item.title}</h4>
-                    </div>
-                    <Link href="/learning">
-                      <Button className="rounded-xl bg-gradient-to-r from-primary to-accent hover:opacity-90">
-                        <Play className="w-4 h-4 mr-2" />
-                        Resume
-                      </Button>
-                    </Link>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">{item.problems}</span>
-                      <span className="text-muted-foreground">{item.estimated}</span>
-                    </div>
-                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${item.progress}%` }}
-                        transition={{ duration: 1, delay: 0.5 }}
-                        className="h-full bg-gradient-to-r from-primary to-accent"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Card>
-          </motion.div>
-
-          {/* Mastery Overview */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="p-6 bg-card border-border/50">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-primary" />
-                  <h3 className="font-semibold">Topic Mastery</h3>
-                </div>
-                <Link href="/analytics" className="text-sm text-primary hover:underline">
-                  See details
-                </Link>
-              </div>
-              <div className="space-y-4">
-                {masteryBars.map((item, index) => (
-                  <div key={item.topic}>
-                    <div className="flex justify-between text-sm mb-2">
-                      <span>{item.topic}</span>
-                      <span className="text-muted-foreground">{item.mastery}%</span>
-                    </div>
-                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: `${item.mastery}%` }}
-                        transition={{ duration: 0.8, delay: 0.4 + index * 0.1 }}
-                        className={`h-full ${item.color}`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </motion.div>
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-6">
-          {/* Today's Plan */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.35 }}
-          >
-            <Card className="p-6 bg-card border-border/50">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-accent" />
-                  <h3 className="font-semibold">{"Today's"} Plan</h3>
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  {completedTasks}/{totalTasks} done
-                </span>
-              </div>
-              <div className="space-y-3">
-                {todaysTasks.map((task, index) => (
-                  <motion.div
-                    key={task.id}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + index * 0.05 }}
-                    className={`p-4 rounded-xl border transition-colors ${
-                      task.completed
-                        ? "bg-secondary/30 border-border/30 opacity-60"
-                        : "bg-secondary/50 border-border/50 hover:border-border"
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
-                        task.completed ? "border-emerald-500 bg-emerald-500" : "border-muted-foreground"
-                      }`}>
-                        {task.completed && <CheckCircle2 className="w-3 h-3 text-white" />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className={`font-medium text-sm ${task.completed && "line-through"}`}>
-                          {task.title}
-                        </h4>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-xs text-muted-foreground">{task.type}</span>
-                          <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">{task.duration}</span>
-                          <span className="w-1 h-1 rounded-full bg-muted-foreground" />
-                          <span className={`text-xs ${
-                            task.difficulty === "Hard" ? "text-red-400" :
-                            task.difficulty === "Medium" ? "text-yellow-400" : "text-emerald-400"
-                          }`}>
-                            {task.difficulty}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </Card>
-          </motion.div>
-
-          {/* Weak Areas */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-          >
-            <Card className="p-6 bg-card border-border/50">
-              <div className="flex items-center gap-2 mb-6">
-                <AlertCircle className="w-5 h-5 text-orange-500" />
-                <h3 className="font-semibold">Areas to Improve</h3>
-              </div>
-              <div className="space-y-4">
-                {weakAreas.map((area, index) => (
-                  <motion.div
-                    key={area.topic}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.45 + index * 0.05 }}
-                    className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20"
-                  >
-                    <h4 className="font-medium text-sm mb-1">{area.topic}</h4>
-                    <p className="text-xs text-muted-foreground">{area.insight}</p>
-                  </motion.div>
-                ))}
-              </div>
-              <Link href="/learning">
-                <Button variant="outline" className="w-full mt-4 rounded-xl">
-                  Practice Weak Areas
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </Card>
-          </motion.div>
+    <div className="min-h-screen">
+      {/* Top Bar */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+        <div className="flex items-center justify-between h-14 px-6">
+          <div className="flex items-center gap-4">
+            <h1 className="text-lg font-semibold">{"Striver's"} A2Z Sheet</h1>
+            <span className="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded">
+              Last updated: Today
+            </span>
+          </div>
+          
+          {/* Search */}
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setShowCommandPalette(true)}
+              className="flex items-center gap-2 h-9 px-3 bg-secondary rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Search className="w-4 h-4" />
+              <span className="hidden sm:inline">Search for a problem...</span>
+              <kbd className="hidden sm:inline-flex items-center gap-0.5 bg-muted px-1.5 py-0.5 rounded text-xs">
+                <Command className="w-3 h-3" />K
+              </kbd>
+            </button>
+            <Link href="/learning">
+              <Button size="sm" className="h-9 bg-primary text-primary-foreground hover:bg-primary/90">
+                <Shuffle className="w-4 h-4 mr-2" />
+                Random Problem
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
+
+      <div className="p-6 max-w-6xl mx-auto">
+        {/* Progress Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 p-6 bg-card rounded-xl border border-border">
+            {/* Overall Progress Circle */}
+            <div className="flex items-center gap-6">
+              <div className="relative w-24 h-24">
+                <svg className="progress-ring w-24 h-24">
+                  <circle
+                    className="text-secondary"
+                    strokeWidth="8"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="40"
+                    cx="48"
+                    cy="48"
+                  />
+                  <circle
+                    className="text-primary"
+                    strokeWidth="8"
+                    strokeDasharray={`${progressPercentage * 2.51} 251`}
+                    strokeLinecap="round"
+                    stroke="currentColor"
+                    fill="transparent"
+                    r="40"
+                    cx="48"
+                    cy="48"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-2xl font-bold">{progressPercentage}%</span>
+                </div>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-sm mb-1">Overall Progress</p>
+                <p className="text-2xl font-bold">{completedProblems}/{totalProblems}</p>
+                <p className="text-xs text-muted-foreground mt-1">Problems solved</p>
+              </div>
+            </div>
+
+            {/* Difficulty Stats */}
+            <div className="flex gap-4">
+              <div className="text-center px-6 py-3 bg-success/10 rounded-lg border border-success/20">
+                <p className="text-sm text-muted-foreground mb-1">Easy</p>
+                <p className="text-xl font-bold text-success">{difficultyStats.easy.completed}/{difficultyStats.easy.total}</p>
+              </div>
+              <div className="text-center px-6 py-3 bg-warning/10 rounded-lg border border-warning/20">
+                <p className="text-sm text-muted-foreground mb-1">Medium</p>
+                <p className="text-xl font-bold text-warning">{difficultyStats.medium.completed}/{difficultyStats.medium.total}</p>
+              </div>
+              <div className="text-center px-6 py-3 bg-destructive/10 rounded-lg border border-destructive/20">
+                <p className="text-sm text-muted-foreground mb-1">Hard</p>
+                <p className="text-xl font-bold text-destructive">{difficultyStats.hard.completed}/{difficultyStats.hard.total}</p>
+              </div>
+            </div>
+
+            {/* Streak */}
+            <div className="flex items-center gap-3 px-4 py-3 bg-primary/10 rounded-lg border border-primary/20">
+              <Flame className="w-8 h-8 text-primary" />
+              <div>
+                <p className="text-2xl font-bold">12</p>
+                <p className="text-xs text-muted-foreground">Day Streak</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* AI Insight Banner */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-6 p-4 bg-accent/10 border border-accent/20 rounded-xl flex items-center gap-4"
+        >
+          <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center shrink-0">
+            <Sparkles className="w-5 h-5 text-accent" />
+          </div>
+          <div className="flex-1">
+            <p className="text-sm font-medium">AI Recommendation</p>
+            <p className="text-sm text-muted-foreground">
+              Based on your progress, you should focus on <span className="text-foreground font-medium">Binary Search</span> next. 
+              You have strong array fundamentals to build on.
+            </p>
+          </div>
+          <Link href="/learning">
+            <Button size="sm" variant="outline" className="shrink-0">
+              Start Now
+            </Button>
+          </Link>
+        </motion.div>
+
+        {/* DSA Sheet Sections */}
+        <div className="space-y-2">
+          {dsaSheet.map((section, index) => {
+            const isExpanded = expandedSections.includes(section.id)
+            const sectionProgress = section.total > 0 ? Math.round((section.completed / section.total) * 100) : 0
+            
+            return (
+              <motion.div
+                key={section.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 * index }}
+                className="bg-card border border-border rounded-xl overflow-hidden"
+              >
+                {/* Section Header */}
+                <button
+                  onClick={() => toggleSection(section.id)}
+                  className="w-full flex items-center gap-4 p-4 hover:bg-secondary/50 transition-colors text-left"
+                >
+                  <div className={`w-6 h-6 rounded-md flex items-center justify-center transition-colors ${
+                    section.completed === section.total ? "bg-success text-success-foreground" : "bg-secondary"
+                  }`}>
+                    {isExpanded ? (
+                      <ChevronDown className="w-4 h-4" />
+                    ) : (
+                      <ChevronRight className="w-4 h-4" />
+                    )}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-muted-foreground font-medium">{section.id}.</span>
+                      <h3 className="font-medium truncate">{section.title}</h3>
+                    </div>
+                  </div>
+
+                  {/* Progress indicator */}
+                  <div className="flex items-center gap-4">
+                    <div className="hidden sm:flex items-center gap-2 w-32">
+                      <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
+                        <div 
+                          className={`h-full transition-all ${
+                            sectionProgress === 100 ? "bg-success" : "bg-primary"
+                          }`}
+                          style={{ width: `${sectionProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                    <span className={`text-sm font-medium tabular-nums ${
+                      section.completed === section.total ? "text-success" : "text-muted-foreground"
+                    }`}>
+                      {section.completed}/{section.total}
+                    </span>
+                  </div>
+                </button>
+
+                {/* Section Content */}
+                <AnimatePresence>
+                  {isExpanded && section.problems.length > 0 && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="border-t border-border">
+                        {/* Table Header */}
+                        <div className="grid grid-cols-[1fr,auto,auto,auto,auto] gap-4 px-4 py-2 bg-secondary/30 text-xs text-muted-foreground font-medium">
+                          <span className="pl-10">Problem</span>
+                          <span className="w-20 text-center">Difficulty</span>
+                          <span className="w-16 text-center">Article</span>
+                          <span className="w-16 text-center">Video</span>
+                          <span className="w-20 text-center">Status</span>
+                        </div>
+                        
+                        {/* Problems */}
+                        {section.problems.map((problem, pIndex) => (
+                          <Link
+                            key={pIndex}
+                            href="/learning"
+                            className="grid grid-cols-[1fr,auto,auto,auto,auto] gap-4 items-center px-4 py-3 hover:bg-secondary/30 transition-colors border-t border-border/50"
+                          >
+                            <div className="flex items-center gap-3 pl-2 min-w-0">
+                              <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                                problem.status === "completed" 
+                                  ? "bg-success" 
+                                  : problem.status === "in-progress"
+                                  ? "bg-primary"
+                                  : "border border-muted-foreground"
+                              }`}>
+                                {problem.status === "completed" && <CheckCircle2 className="w-3 h-3 text-white" />}
+                                {problem.status === "in-progress" && <Play className="w-2.5 h-2.5 text-white" />}
+                              </div>
+                              <span className="truncate">{problem.title}</span>
+                            </div>
+                            <span className={`w-20 text-center text-xs px-2 py-1 rounded-full ${
+                              problem.difficulty === "Easy" 
+                                ? "badge-easy" 
+                                : problem.difficulty === "Medium" 
+                                ? "badge-medium" 
+                                : "badge-hard"
+                            }`}>
+                              {problem.difficulty}
+                            </span>
+                            <div className="w-16 flex justify-center">
+                              {problem.article && (
+                                <FileText className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+                              )}
+                            </div>
+                            <div className="w-16 flex justify-center">
+                              {problem.video && (
+                                <Video className="w-4 h-4 text-muted-foreground hover:text-destructive transition-colors" />
+                              )}
+                            </div>
+                            <div className="w-20 flex justify-center">
+                              <ExternalLink className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Command Palette Modal */}
+      <AnimatePresence>
+        {showCommandPalette && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/50 flex items-start justify-center pt-[20vh]"
+            onClick={() => setShowCommandPalette(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: -20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -20 }}
+              className="w-full max-w-lg bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-center gap-3 p-4 border-b border-border">
+                <Search className="w-5 h-5 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search for a command to run..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1 border-0 bg-transparent focus-visible:ring-0 p-0 h-auto text-base"
+                  autoFocus
+                />
+                <kbd className="text-xs text-muted-foreground bg-secondary px-1.5 py-0.5 rounded">ESC</kbd>
+              </div>
+              <div className="p-2 max-h-80 overflow-y-auto">
+                <p className="px-3 py-2 text-xs text-muted-foreground font-medium">Suggestions</p>
+                {["Two Sum", "Binary Search", "Merge Sort", "Valid Parentheses"].map((item, i) => (
+                  <Link
+                    key={i}
+                    href="/learning"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-secondary transition-colors"
+                    onClick={() => setShowCommandPalette(false)}
+                  >
+                    <Target className="w-4 h-4 text-muted-foreground" />
+                    <span>{item}</span>
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

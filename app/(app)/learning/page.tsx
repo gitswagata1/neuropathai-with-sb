@@ -9,17 +9,24 @@ import {
   ChevronRight,
   Lightbulb,
   Sparkles,
-  MessageSquare,
   CheckCircle2,
   Circle,
   Clock,
   Target,
   ArrowRight,
-  Zap,
-  HelpCircle
+  ArrowLeft,
+  HelpCircle,
+  Video,
+  FileText,
+  ExternalLink,
+  ThumbsUp,
+  ThumbsDown,
+  Copy,
+  Check
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import Link from "next/link"
 
 const topicContent = {
   title: "Binary Search Trees",
@@ -80,69 +87,12 @@ function insert(root: TreeNode | null, val: number): TreeNode {
 }
 
 const practiceProblems = [
-  {
-    id: 1,
-    title: "Validate Binary Search Tree",
-    difficulty: "Medium",
-    status: "completed",
-    time: "15 min"
-  },
-  {
-    id: 2,
-    title: "Search in a BST",
-    difficulty: "Easy",
-    status: "completed",
-    time: "10 min"
-  },
-  {
-    id: 3,
-    title: "Insert into a BST",
-    difficulty: "Medium",
-    status: "in-progress",
-    time: "20 min"
-  },
-  {
-    id: 4,
-    title: "Delete Node in a BST",
-    difficulty: "Medium",
-    status: "locked",
-    time: "25 min"
-  },
-  {
-    id: 5,
-    title: "Kth Smallest Element in BST",
-    difficulty: "Medium",
-    status: "locked",
-    time: "20 min"
-  },
-  {
-    id: 6,
-    title: "Convert BST to Greater Tree",
-    difficulty: "Medium",
-    status: "locked",
-    time: "20 min"
-  }
-]
-
-const aiButtons = [
-  {
-    id: "explain",
-    label: "Explain Simply",
-    icon: Lightbulb,
-    description: "Get a simpler explanation"
-  },
-  {
-    id: "generate",
-    label: "Generate Problems",
-    icon: Sparkles,
-    description: "Create practice problems"
-  },
-  {
-    id: "mistake",
-    label: "Explain My Mistake",
-    icon: HelpCircle,
-    description: "Analyze your errors"
-  }
+  { id: 1, title: "Validate Binary Search Tree", difficulty: "Medium", status: "completed", time: "15 min", acceptance: "32%" },
+  { id: 2, title: "Search in a BST", difficulty: "Easy", status: "completed", time: "10 min", acceptance: "78%" },
+  { id: 3, title: "Insert into a BST", difficulty: "Medium", status: "in-progress", time: "20 min", acceptance: "45%" },
+  { id: 4, title: "Delete Node in a BST", difficulty: "Medium", status: "todo", time: "25 min", acceptance: "38%" },
+  { id: 5, title: "Kth Smallest Element in BST", difficulty: "Medium", status: "todo", time: "20 min", acceptance: "42%" },
+  { id: 6, title: "Convert BST to Greater Tree", difficulty: "Medium", status: "todo", time: "20 min", acceptance: "65%" }
 ]
 
 export default function LearningPage() {
@@ -150,356 +100,381 @@ export default function LearningPage() {
   const [showAiResponse, setShowAiResponse] = useState(false)
   const [aiLoading, setAiLoading] = useState(false)
   const [selectedAiAction, setSelectedAiAction] = useState("")
+  const [copied, setCopied] = useState(false)
 
   const handleAiAction = (actionId: string) => {
     setSelectedAiAction(actionId)
     setAiLoading(true)
+    setShowAiResponse(false)
     setTimeout(() => {
       setAiLoading(false)
       setShowAiResponse(true)
     }, 1500)
   }
 
+  const handleCopy = () => {
+    navigator.clipboard.writeText(topicContent.codeExample)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   const completedCount = practiceProblems.filter(p => p.status === "completed").length
 
   return (
-    <div className="min-h-screen p-6 lg:p-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-          <span>Trees & Graphs</span>
-          <ChevronRight className="w-4 h-4" />
-          <span className="text-foreground">Binary Search Trees</span>
-        </div>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{topicContent.title}</h1>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span className="flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                {topicContent.duration}
-              </span>
-              <span className={`px-2 py-0.5 rounded-full text-xs ${
-                topicContent.difficulty === "Medium" ? "bg-yellow-500/20 text-yellow-400" : "bg-emerald-500/20 text-emerald-400"
-              }`}>
-                {topicContent.difficulty}
-              </span>
-              <span className="flex items-center gap-1">
-                <Target className="w-4 h-4" />
-                {completedCount}/{practiceProblems.length} problems
-              </span>
+    <div className="min-h-screen">
+      {/* Top Navigation */}
+      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur border-b border-border">
+        <div className="flex items-center justify-between h-14 px-6">
+          <div className="flex items-center gap-3 text-sm">
+            <Link href="/dashboard" className="text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+            <span className="text-muted-foreground">Trees & Graphs</span>
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+            <span className="font-medium">Binary Search Trees</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">{completedCount}/{practiceProblems.length} completed</span>
+            <div className="w-24 h-1.5 bg-secondary rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-success transition-all"
+                style={{ width: `${(completedCount / practiceProblems.length) * 100}%` }}
+              />
             </div>
           </div>
-          <div className="h-2 sm:w-48 bg-secondary rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${(completedCount / practiceProblems.length) * 100}%` }}
-              transition={{ duration: 1 }}
-              className="h-full bg-gradient-to-r from-primary to-accent"
-            />
-          </div>
         </div>
-      </motion.div>
+      </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="xl:col-span-2 space-y-6">
-          {/* Tabs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <div className="flex gap-2 p-1 bg-secondary/50 rounded-2xl w-fit">
-              <button
-                onClick={() => setActiveTab("learn")}
-                className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all ${
-                  activeTab === "learn"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <BookOpen className="w-4 h-4" />
-                Learn
-              </button>
-              <button
-                onClick={() => setActiveTab("practice")}
-                className={`flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium transition-all ${
-                  activeTab === "practice"
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Code className="w-4 h-4" />
-                Practice
-              </button>
+      <div className="p-6 max-w-6xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold mb-2">{topicContent.title}</h1>
+              <div className="flex items-center gap-3 text-sm">
+                <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <Clock className="w-4 h-4" />
+                  {topicContent.duration}
+                </span>
+                <span className={`px-2 py-0.5 rounded text-xs font-medium badge-medium`}>
+                  {topicContent.difficulty}
+                </span>
+                <span className="flex items-center gap-1.5 text-muted-foreground">
+                  <Target className="w-4 h-4" />
+                  {completedCount}/{practiceProblems.length} problems
+                </span>
+              </div>
             </div>
-          </motion.div>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" className="gap-2">
+                <Video className="w-4 h-4" />
+                Watch Video
+              </Button>
+              <Link href="/code-tutor">
+                <Button size="sm" className="gap-2 bg-primary text-primary-foreground">
+                  <Code className="w-4 h-4" />
+                  Open Editor
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </motion.div>
 
-          <AnimatePresence mode="wait">
-            {activeTab === "learn" ? (
-              <motion.div
-                key="learn"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-6"
-              >
-                {/* Explanation */}
-                <Card className="p-6 bg-card border-border/50">
-                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-primary" />
-                    Topic Explanation
-                  </h2>
-                  <div className="prose prose-invert max-w-none">
-                    <p className="text-muted-foreground whitespace-pre-line leading-relaxed">
-                      {topicContent.description}
-                    </p>
-                  </div>
-                </Card>
+        {/* Tabs */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-6"
+        >
+          <div className="flex gap-1 p-1 bg-secondary rounded-lg w-fit">
+            <button
+              onClick={() => setActiveTab("learn")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                activeTab === "learn"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Learn
+            </button>
+            <button
+              onClick={() => setActiveTab("practice")}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                activeTab === "practice"
+                  ? "bg-card text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Code className="w-4 h-4" />
+              Practice
+            </button>
+          </div>
+        </motion.div>
 
-                {/* Code Example */}
-                <Card className="p-6 bg-card border-border/50 overflow-hidden">
-                  <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                    <Code className="w-5 h-5 text-accent" />
-                    Code Example
-                  </h2>
-                  <div className="relative">
-                    <pre className="p-5 rounded-xl bg-[#0d1117] border border-border/50 overflow-x-auto text-sm">
-                      <code className="text-emerald-400 font-mono">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="xl:col-span-2 space-y-6">
+            <AnimatePresence mode="wait">
+              {activeTab === "learn" ? (
+                <motion.div
+                  key="learn"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-6"
+                >
+                  {/* Explanation */}
+                  <Card className="p-6 bg-card border-border">
+                    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-muted-foreground" />
+                      Concept
+                    </h2>
+                    <div className="prose prose-sm prose-invert max-w-none">
+                      <p className="text-muted-foreground whitespace-pre-line leading-relaxed text-sm">
+                        {topicContent.description}
+                      </p>
+                    </div>
+                  </Card>
+
+                  {/* Code Example */}
+                  <Card className="p-6 bg-card border-border overflow-hidden">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-lg font-semibold flex items-center gap-2">
+                        <Code className="w-5 h-5 text-muted-foreground" />
+                        Implementation
+                      </h2>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleCopy}
+                        className="gap-2 text-muted-foreground hover:text-foreground"
+                      >
+                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                        {copied ? "Copied!" : "Copy"}
+                      </Button>
+                    </div>
+                    <pre className="p-4 rounded-lg bg-[#0d1117] border border-border overflow-x-auto text-sm">
+                      <code className="text-[#e6edf3] font-mono text-xs leading-relaxed">
                         {topicContent.codeExample}
                       </code>
                     </pre>
-                  </div>
-                </Card>
+                  </Card>
 
-                {/* AI Actions */}
-                <Card className="p-6 bg-gradient-to-br from-primary/10 via-card to-accent/10 border-primary/20">
-                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-primary" />
-                    AI Learning Assistant
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {aiButtons.map((btn) => (
-                      <Button
-                        key={btn.id}
-                        variant="outline"
-                        onClick={() => handleAiAction(btn.id)}
-                        className="h-auto py-4 px-4 rounded-xl border-border/50 hover:border-primary hover:bg-primary/10 flex flex-col items-center gap-2"
-                      >
-                        <btn.icon className="w-5 h-5 text-primary" />
-                        <span className="font-medium">{btn.label}</span>
-                      </Button>
-                    ))}
-                  </div>
+                  {/* AI Assistant */}
+                  <Card className="p-6 bg-card border-border">
+                    <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-accent" />
+                      AI Learning Assistant
+                    </h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                      {[
+                        { id: "explain", label: "Explain Simply", icon: Lightbulb },
+                        { id: "generate", label: "Generate Problems", icon: Sparkles },
+                        { id: "mistake", label: "Common Mistakes", icon: HelpCircle }
+                      ].map((btn) => (
+                        <Button
+                          key={btn.id}
+                          variant="outline"
+                          onClick={() => handleAiAction(btn.id)}
+                          className="h-auto py-3 px-4 justify-start gap-3 bg-secondary/50 border-border hover:bg-secondary hover:border-primary/50"
+                        >
+                          <btn.icon className="w-4 h-4 text-accent shrink-0" />
+                          <span className="text-sm">{btn.label}</span>
+                        </Button>
+                      ))}
+                    </div>
 
-                  <AnimatePresence>
-                    {(aiLoading || showAiResponse) && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        className="mt-4"
-                      >
-                        <div className="p-5 rounded-xl bg-background/50 border border-border/50">
-                          {aiLoading ? (
-                            <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                    <AnimatePresence>
+                      {(aiLoading || showAiResponse) && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                        >
+                          <div className="p-4 rounded-lg bg-secondary/50 border border-border">
+                            {aiLoading ? (
+                              <div className="flex items-center gap-3">
                                 <motion.div
                                   animate={{ rotate: 360 }}
                                   transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                                 >
-                                  <Sparkles className="w-4 h-4 text-primary" />
+                                  <Sparkles className="w-4 h-4 text-accent" />
                                 </motion.div>
+                                <span className="text-sm text-muted-foreground">AI is thinking...</span>
                               </div>
-                              <span className="text-muted-foreground">AI is thinking...</span>
-                            </div>
-                          ) : (
-                            <div>
-                              <div className="flex items-center gap-2 mb-3">
-                                <div className="w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center">
-                                  <Sparkles className="w-3 h-3 text-primary" />
-                                </div>
-                                <span className="font-medium text-sm">AI Response</span>
-                              </div>
-                              <p className="text-sm text-muted-foreground leading-relaxed">
-                                {selectedAiAction === "explain" && 
-                                  "Think of a BST like a guessing game! Start at the top. If your number is smaller, go left. If it's bigger, go right. Keep doing this until you find what you're looking for. It's like a super-efficient way to find things in a sorted list!"
-                                }
-                                {selectedAiAction === "generate" &&
-                                  "Here are 3 practice problems for you:\n\n1. Given a BST, find the minimum value\n2. Check if a given tree is a valid BST\n3. Find the in-order successor of a node"
-                                }
-                                {selectedAiAction === "mistake" &&
-                                  "Based on your recent submissions, I notice you often forget to handle the edge case when the tree is empty (null root). Always start your recursive functions with a base case check: if (!root) return..."
-                                }
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </Card>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="practice"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Card className="p-6 bg-card border-border/50">
-                  <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                    <Target className="w-5 h-5 text-primary" />
-                    Practice Problems
-                  </h2>
-                  <div className="space-y-3">
-                    {practiceProblems.map((problem, index) => (
-                      <motion.div
-                        key={problem.id}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className={`p-4 rounded-xl border transition-all ${
-                          problem.status === "locked"
-                            ? "bg-secondary/30 border-border/30 opacity-50"
-                            : problem.status === "completed"
-                            ? "bg-emerald-500/10 border-emerald-500/30"
-                            : "bg-secondary/50 border-border/50 hover:border-primary cursor-pointer"
-                        }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                            problem.status === "completed"
-                              ? "bg-emerald-500"
-                              : problem.status === "in-progress"
-                              ? "bg-primary"
-                              : "bg-secondary"
-                          }`}>
-                            {problem.status === "completed" ? (
-                              <CheckCircle2 className="w-4 h-4 text-white" />
-                            ) : problem.status === "in-progress" ? (
-                              <Play className="w-3 h-3 text-white" />
                             ) : (
-                              <Circle className="w-4 h-4 text-muted-foreground" />
+                              <div>
+                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                  {selectedAiAction === "explain" && 
+                                    "Think of a BST like a guessing game! Start at the top. If your number is smaller, go left. If it's bigger, go right. Keep doing this until you find what you're looking for. It's like a super-efficient way to find things in a sorted list!"
+                                  }
+                                  {selectedAiAction === "generate" &&
+                                    "Here are 3 practice problems for you:\n\n1. Given a BST, find the minimum value\n2. Check if a given tree is a valid BST\n3. Find the in-order successor of a node"
+                                  }
+                                  {selectedAiAction === "mistake" &&
+                                    "Common mistakes to avoid:\n\n1. Forgetting to handle null/empty tree cases\n2. Using wrong comparison operators (< vs <=)\n3. Not considering duplicate values in BST definition\n4. Confusing in-order with pre-order traversal"
+                                  }
+                                </p>
+                                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-border">
+                                  <span className="text-xs text-muted-foreground">Was this helpful?</span>
+                                  <Button variant="ghost" size="sm" className="h-7 px-2">
+                                    <ThumbsUp className="w-3.5 h-3.5" />
+                                  </Button>
+                                  <Button variant="ghost" size="sm" className="h-7 px-2">
+                                    <ThumbsDown className="w-3.5 h-3.5" />
+                                  </Button>
+                                </div>
+                              </div>
                             )}
                           </div>
-                          <div className="flex-1">
-                            <h3 className="font-medium">{problem.title}</h3>
-                            <div className="flex items-center gap-3 mt-1">
-                              <span className={`text-xs px-2 py-0.5 rounded-full ${
-                                problem.difficulty === "Easy"
-                                  ? "bg-emerald-500/20 text-emerald-400"
-                                  : problem.difficulty === "Medium"
-                                  ? "bg-yellow-500/20 text-yellow-400"
-                                  : "bg-red-500/20 text-red-400"
-                              }`}>
-                                {problem.difficulty}
-                              </span>
-                              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                {problem.time}
-                              </span>
-                            </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </Card>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="practice"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <Card className="bg-card border-border overflow-hidden">
+                    {/* Table Header */}
+                    <div className="grid grid-cols-[1fr,auto,auto,auto] gap-4 px-4 py-3 bg-secondary/50 text-xs text-muted-foreground font-medium border-b border-border">
+                      <span>Problem</span>
+                      <span className="w-20 text-center">Difficulty</span>
+                      <span className="w-20 text-center">Acceptance</span>
+                      <span className="w-24 text-center">Action</span>
+                    </div>
+                    
+                    {/* Problems */}
+                    {practiceProblems.map((problem, index) => (
+                      <Link
+                        key={problem.id}
+                        href="/code-tutor"
+                        className="grid grid-cols-[1fr,auto,auto,auto] gap-4 items-center px-4 py-3.5 hover:bg-secondary/30 transition-colors border-b border-border/50 last:border-0"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 ${
+                            problem.status === "completed" 
+                              ? "bg-success" 
+                              : problem.status === "in-progress"
+                              ? "bg-primary"
+                              : "border border-muted-foreground"
+                          }`}>
+                            {problem.status === "completed" && <CheckCircle2 className="w-3 h-3 text-white" />}
+                            {problem.status === "in-progress" && <Play className="w-2.5 h-2.5 text-white" />}
                           </div>
-                          {problem.status !== "locked" && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="rounded-lg"
-                            >
-                              {problem.status === "completed" ? "Review" : "Solve"}
-                              <ArrowRight className="w-4 h-4 ml-1" />
-                            </Button>
-                          )}
+                          <div className="min-w-0">
+                            <span className="block truncate font-medium text-sm">{problem.title}</span>
+                            <span className="text-xs text-muted-foreground">{problem.time}</span>
+                          </div>
                         </div>
-                      </motion.div>
+                        <span className={`w-20 text-center text-xs px-2 py-1 rounded ${
+                          problem.difficulty === "Easy" 
+                            ? "badge-easy" 
+                            : problem.difficulty === "Medium" 
+                            ? "badge-medium" 
+                            : "badge-hard"
+                        }`}>
+                          {problem.difficulty}
+                        </span>
+                        <span className="w-20 text-center text-sm text-muted-foreground">
+                          {problem.acceptance}
+                        </span>
+                        <div className="w-24 flex justify-center">
+                          <Button size="sm" variant={problem.status === "completed" ? "outline" : "default"} className="h-8 text-xs">
+                            {problem.status === "completed" ? "Review" : "Solve"}
+                          </Button>
+                        </div>
+                      </Link>
                     ))}
-                  </div>
-                </Card>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                  </Card>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
 
-        {/* Right Sidebar */}
-        <div className="space-y-6">
-          {/* Quick Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <Card className="p-6 bg-card border-border/50">
-              <h3 className="font-semibold mb-4">Your Progress</h3>
-              <div className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-muted-foreground">Topic Mastery</span>
-                    <span className="font-medium">65%</span>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Progress */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Card className="p-5 bg-card border-border">
+                <h3 className="font-semibold mb-4 text-sm">Your Progress</h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-muted-foreground">Topic Mastery</span>
+                      <span className="font-medium">65%</span>
+                    </div>
+                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                      <div className="h-full w-[65%] bg-primary" />
+                    </div>
                   </div>
-                  <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                    <div className="h-full w-[65%] bg-gradient-to-r from-primary to-accent" />
+                  <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border">
+                    <div>
+                      <p className="text-xl font-bold">{completedCount}</p>
+                      <p className="text-xs text-muted-foreground">Solved</p>
+                    </div>
+                    <div>
+                      <p className="text-xl font-bold">2.5h</p>
+                      <p className="text-xs text-muted-foreground">Time Spent</p>
+                    </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/50">
-                  <div>
-                    <p className="text-2xl font-bold">8</p>
-                    <p className="text-xs text-muted-foreground">Problems Solved</p>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">2.5h</p>
-                    <p className="text-xs text-muted-foreground">Time Spent</p>
-                  </div>
+              </Card>
+            </motion.div>
+
+            {/* Related Topics */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+            >
+              <Card className="p-5 bg-card border-border">
+                <h3 className="font-semibold mb-4 text-sm">Related Topics</h3>
+                <div className="space-y-2">
+                  {["AVL Trees", "Red-Black Trees", "Tree Traversals", "Heap"].map((topic) => (
+                    <button
+                      key={topic}
+                      className="w-full p-3 rounded-lg bg-secondary/50 border border-border hover:border-primary/50 text-left text-sm transition-colors flex items-center justify-between group"
+                    >
+                      <span>{topic}</span>
+                      <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    </button>
+                  ))}
                 </div>
-              </div>
-            </Card>
-          </motion.div>
+              </Card>
+            </motion.div>
 
-          {/* Related Topics */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-          >
-            <Card className="p-6 bg-card border-border/50">
-              <h3 className="font-semibold mb-4">Related Topics</h3>
-              <div className="space-y-2">
-                {["AVL Trees", "Red-Black Trees", "Tree Traversals", "Heap"].map((topic, i) => (
-                  <button
-                    key={topic}
-                    className="w-full p-3 rounded-xl bg-secondary/30 border border-border/50 hover:border-border text-left text-sm transition-colors flex items-center justify-between group"
-                  >
-                    <span>{topic}</span>
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
-                  </button>
-                ))}
-              </div>
-            </Card>
-          </motion.div>
-
-          {/* AI Tip */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Card className="p-6 bg-gradient-to-br from-accent/20 to-primary/20 border-accent/30">
-              <div className="flex items-center gap-2 mb-3">
-                <Zap className="w-5 h-5 text-accent" />
-                <h3 className="font-semibold">AI Tip</h3>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                You struggle with recursion base cases. When solving BST problems, always ask yourself: {'"'}What happens when root is null?{'"'}
-              </p>
-            </Card>
-          </motion.div>
+            {/* AI Tip */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Card className="p-5 bg-accent/10 border-accent/20">
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="w-4 h-4 text-accent" />
+                  <h3 className="font-semibold text-sm">AI Insight</h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  You struggle with recursion base cases. Try drawing the call stack for small inputs before coding.
+                </p>
+              </Card>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>
