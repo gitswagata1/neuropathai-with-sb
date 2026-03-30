@@ -2,23 +2,31 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Brain, Github, ArrowRight, Eye, EyeOff, Sparkles, Zap, Target } from "lucide-react"
+import { Brain, Github, ArrowRight, Eye, EyeOff, Sparkles, Zap, Target, Play, CheckCircle2, Users, BookOpen, Code2, Trophy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
 
-const floatingTopics = [
-  { label: "Dynamic Programming", position: "top-[15%] left-[8%]", delay: 0 },
-  { label: "Graph Algorithms", position: "top-[10%] right-[15%]", delay: 0.1 },
-  { label: "Binary Trees", position: "bottom-[35%] right-[10%]", delay: 0.2 },
-  { label: "Recursion", position: "bottom-[28%] left-[5%]", delay: 0.3 },
+const dsaTopics = [
+  { name: "Learn the basics", count: "0/31", color: "bg-emerald-500" },
+  { name: "Sorting Techniques", count: "0/12", color: "bg-blue-500" },
+  { name: "Arrays & Hashing", count: "0/45", color: "bg-amber-500" },
+  { name: "Binary Search", count: "0/32", color: "bg-violet-500" },
+  { name: "Linked List", count: "0/28", color: "bg-rose-500" },
+  { name: "Recursion & Backtracking", count: "0/24", color: "bg-cyan-500" },
 ]
 
 const features = [
-  { icon: Sparkles, text: "Adaptive learning paths that evolve with you" },
-  { icon: Zap, text: "Real-time AI explanations and code feedback" },
-  { icon: Target, text: "Concept mastery tracking across 200+ topics" },
+  { icon: Sparkles, text: "Personalized roadmaps based on your skill level" },
+  { icon: Code2, text: "AI-powered instant doubt support" },
+  { icon: Target, text: "Track progress with streaks & leaderboards" },
+]
+
+const stats = [
+  { value: "14,90,641+", label: "Learners" },
+  { value: "500+", label: "Problems" },
+  { value: "50+", label: "Topics" },
 ]
 
 const demoAccounts = [
@@ -40,129 +48,133 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <div className="flex-1 flex">
-        {/* Left Panel - Branding with Brain Illustration */}
-        <div className="hidden lg:flex lg:w-[50%] relative overflow-hidden bg-gradient-to-br from-[#0f1629] via-[#0a0f1a] to-[#0d1424]">
-          {/* Subtle grid pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:48px_48px]" />
-          
-          {/* Gradient orbs */}
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 left-1/3 w-[300px] h-[300px] bg-violet-500/10 rounded-full blur-[100px]" />
-
-          {/* Floating topic badges */}
-          {floatingTopics.map((topic, i) => (
-            <motion.div
-              key={topic.label}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: topic.delay + 0.3 }}
-              className={`absolute ${topic.position} z-20`}
-            >
-              <div className="px-4 py-2 rounded-full bg-[#1a2744]/80 border border-[#2a3a5c] text-sm text-muted-foreground backdrop-blur-sm">
-                {topic.label}
+    <div className="min-h-screen flex flex-col bg-[#0a0a0f]">
+      {/* Header */}
+      <header className="border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                <Brain className="w-5 h-5 text-white" />
               </div>
-            </motion.div>
-          ))}
-
-          {/* Brain Illustration */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              {/* Center brain icon */}
-              <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-[#1a2744] to-[#0f1629] border border-[#2a3a5c] flex items-center justify-center shadow-2xl">
-                <Brain className="w-16 h-16 text-primary/80" />
-              </div>
-              
-              {/* Floating accent icons */}
-              <motion.div 
-                animate={{ y: [-5, 5, -5] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-4 -right-4 w-10 h-10 rounded-xl bg-primary/20 border border-primary/30 flex items-center justify-center"
-              >
-                <svg className="w-5 h-5 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M2 12h4l3-9 6 18 3-9h4" />
-                </svg>
-              </motion.div>
-              
-              <motion.div 
-                animate={{ y: [5, -5, 5] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-2 -left-6 w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center"
-              >
-                <Zap className="w-5 h-5 text-amber-500" />
-              </motion.div>
-              
-              <motion.div 
-                animate={{ y: [-3, 3, -3] }}
-                transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-1/2 -right-8 w-10 h-10 rounded-xl bg-violet-500/20 border border-violet-500/30 flex items-center justify-center"
-              >
-                <Target className="w-5 h-5 text-violet-400" />
-              </motion.div>
-            </motion.div>
+              <span className="text-lg font-bold text-white tracking-tight">NeuroPath AI</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="hidden sm:flex items-center gap-2 text-sm text-white/60">
+                <Users className="w-4 h-4" />
+                <span className="font-medium text-white">14,90,641+</span> Learners
+              </span>
+            </div>
           </div>
+        </div>
+      </header>
 
-          {/* Content */}
-          <div className="relative z-20 flex flex-col justify-end px-12 xl:px-16 pb-16 w-full">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
-              <h1 className="text-4xl xl:text-5xl font-bold leading-tight mb-4">
-                Your AI
-                <br />
-                <span className="text-primary">Learning</span>
-                <br />
-                Companion
-              </h1>
-              <p className="text-muted-foreground text-base leading-relaxed max-w-md mb-8">
-                Master computer science with an AI that adapts to your pace, identifies your gaps, and builds your personalized path to expertise.
-              </p>
-
-              {/* Feature list */}
-              <div className="space-y-4">
-                {features.map((feature, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
-                    className="flex items-center gap-3"
-                  >
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                      <feature.icon className="w-4 h-4 text-primary" />
+      <div className="flex-1 flex flex-col lg:flex-row">
+        {/* Left Panel - Hero Content */}
+        <div className="flex-1 relative overflow-hidden">
+          {/* Gradient background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a0f] via-[#0f0f18] to-[#0a0a0f]" />
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
+          
+          <div className="relative z-10 flex flex-col h-full px-6 sm:px-8 lg:px-12 xl:px-16 py-8 lg:py-12">
+            {/* Hero Section */}
+            <div className="flex-1 flex flex-col justify-center max-w-xl">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                {/* Stats badges */}
+                <div className="flex flex-wrap gap-3 mb-6">
+                  {stats.map((stat, i) => (
+                    <div key={i} className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+                      <span className="text-sm font-semibold text-white">{stat.value}</span>
+                      <span className="text-xs text-white/50">{stat.label}</span>
                     </div>
-                    <span className="text-sm text-muted-foreground">{feature.text}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+                  ))}
+                </div>
+
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+                  ONE STOP Learning Platform For{" "}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
+                    TECH Interviews
+                  </span>
+                </h1>
+                
+                <p className="text-base sm:text-lg text-white/60 leading-relaxed mb-8 max-w-lg">
+                  Learn DSA, System Design, and Core CS Subjects with personalised roadmaps, AI-powered feedback, and practice built for results.
+                </p>
+
+                {/* Feature list */}
+                <div className="space-y-3 mb-8">
+                  {features.map((feature, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+                      className="flex items-center gap-3"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
+                        <feature.icon className="w-4 h-4 text-amber-500" />
+                      </div>
+                      <span className="text-sm text-white/70">{feature.text}</span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* CTA for mobile */}
+                <div className="lg:hidden mb-8">
+                  <Link href="/onboarding">
+                    <Button className="w-full h-12 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold text-base">
+                      Start Learning for Free
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
+              </motion.div>
+
+              {/* DSA Sheet Preview */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="hidden lg:block"
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <BookOpen className="w-5 h-5 text-amber-500" />
+                  <h3 className="text-sm font-semibold text-white">AI-Powered A2Z DSA Sheet</h3>
+                </div>
+                <div className="bg-[#12121a] rounded-xl border border-white/5 overflow-hidden">
+                  {dsaTopics.map((topic, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center justify-between px-4 py-3 border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-1.5 h-8 rounded-full ${topic.color}`} />
+                        <span className="text-sm text-white/80">{topic.name}</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs text-white/40 font-mono">{topic.count}</span>
+                        <CheckCircle2 className="w-4 h-4 text-white/20" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
 
         {/* Right Panel - Auth Form */}
-        <div className="flex-1 flex items-center justify-center p-6 sm:p-8 bg-background">
+        <div className="w-full lg:w-[440px] xl:w-[480px] bg-[#0f0f18] border-l border-white/5 flex items-center justify-center p-6 sm:p-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
-            className="w-full max-w-md"
+            className="w-full max-w-sm"
           >
-            {/* Mobile Logo */}
-            <div className="lg:hidden flex items-center justify-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                <Brain className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold tracking-tight">NeuroPath AI</span>
-            </div>
-
             <AnimatePresence mode="wait">
               <motion.div
                 key={isLogin ? "login" : "signup"}
@@ -171,38 +183,44 @@ export default function AuthPage() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <h2 className="text-2xl font-bold mb-1">
+                <h2 className="text-2xl font-bold text-white mb-1">
                   {isLogin ? "Welcome back" : "Get started"}
                 </h2>
-                <p className="text-muted-foreground text-sm mb-6">
+                <p className="text-white/50 text-sm mb-6">
                   {isLogin 
                     ? "Sign in to continue your learning journey" 
                     : "Create your free account to start learning"}
                 </p>
 
                 {/* Toggle Tabs */}
-                <div className="flex gap-3 mb-6">
-                  <Button
+                <div className="flex gap-2 mb-6 p-1 bg-white/5 rounded-lg">
+                  <button
                     onClick={() => setIsLogin(true)}
-                    variant={isLogin ? "default" : "outline"}
-                    className={`flex-1 h-11 ${isLogin ? "bg-primary hover:bg-primary/90" : "bg-transparent border-border hover:bg-secondary"}`}
+                    className={`flex-1 py-2.5 text-sm font-medium rounded-md transition-all ${
+                      isLogin 
+                        ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white" 
+                        : "text-white/60 hover:text-white"
+                    }`}
                   >
                     Sign In
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={() => setIsLogin(false)}
-                    variant={!isLogin ? "default" : "outline"}
-                    className={`flex-1 h-11 ${!isLogin ? "bg-primary hover:bg-primary/90" : "bg-transparent border-border hover:bg-secondary"}`}
+                    className={`flex-1 py-2.5 text-sm font-medium rounded-md transition-all ${
+                      !isLogin 
+                        ? "bg-gradient-to-r from-amber-500 to-orange-600 text-white" 
+                        : "text-white/60 hover:text-white"
+                    }`}
                   >
                     Create Account
-                  </Button>
+                  </button>
                 </div>
 
                 {/* Social Login */}
-                <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="grid grid-cols-2 gap-3 mb-5">
                   <Button
                     variant="outline"
-                    className="h-11 bg-secondary/50 border-border hover:bg-secondary"
+                    className="h-11 bg-white/5 border-white/10 hover:bg-white/10 text-white"
                   >
                     <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
                       <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -214,7 +232,7 @@ export default function AuthPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    className="h-11 bg-secondary/50 border-border hover:bg-secondary"
+                    className="h-11 bg-white/5 border-white/10 hover:bg-white/10 text-white"
                   >
                     <Github className="w-4 h-4 mr-2" />
                     GitHub
@@ -222,12 +240,12 @@ export default function AuthPage() {
                 </div>
 
                 {/* Divider */}
-                <div className="relative mb-6">
+                <div className="relative mb-5">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-border" />
+                    <div className="w-full border-t border-white/10" />
                   </div>
                   <div className="relative flex justify-center">
-                    <span className="bg-background px-3 text-xs text-muted-foreground">
+                    <span className="bg-[#0f0f18] px-3 text-xs text-white/40">
                       or continue with email
                     </span>
                   </div>
@@ -236,33 +254,33 @@ export default function AuthPage() {
                 <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
                   {!isLogin && (
                     <div className="space-y-1.5">
-                      <label className="text-sm font-medium">Full Name</label>
+                      <label className="text-sm font-medium text-white/80">Full Name</label>
                       <Input
                         type="text"
                         placeholder="John Doe"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="h-11 bg-secondary/50 border-border focus-visible:ring-1 focus-visible:ring-primary"
+                        className="h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:border-amber-500/50"
                       />
                     </div>
                   )}
                   
                   <div className="space-y-1.5">
-                    <label className="text-sm font-medium">Email address</label>
+                    <label className="text-sm font-medium text-white/80">Email address</label>
                     <Input
                       type="email"
                       placeholder="you@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-11 bg-secondary/50 border-border focus-visible:ring-1 focus-visible:ring-primary"
+                      className="h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:border-amber-500/50"
                     />
                   </div>
 
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <label className="text-sm font-medium">Password</label>
+                      <label className="text-sm font-medium text-white/80">Password</label>
                       {isLogin && (
-                        <button type="button" className="text-sm text-primary hover:underline">
+                        <button type="button" className="text-sm text-amber-500 hover:text-amber-400">
                           Forgot password?
                         </button>
                       )}
@@ -273,12 +291,12 @@ export default function AuthPage() {
                         placeholder="••••••••"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="h-11 bg-secondary/50 border-border focus-visible:ring-1 focus-visible:ring-primary pr-10"
+                        className="h-11 bg-white/5 border-white/10 text-white placeholder:text-white/30 focus-visible:ring-1 focus-visible:ring-amber-500/50 focus-visible:border-amber-500/50 pr-10"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/60 transition-colors"
                       >
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -291,8 +309,9 @@ export default function AuthPage() {
                         id="remember" 
                         checked={rememberMe}
                         onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                        className="border-white/20 data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
                       />
-                      <label htmlFor="remember" className="text-sm text-muted-foreground cursor-pointer">
+                      <label htmlFor="remember" className="text-sm text-white/50 cursor-pointer">
                         Remember me for 30 days
                       </label>
                     </div>
@@ -300,7 +319,7 @@ export default function AuthPage() {
 
                   <Link href="/onboarding" className="block pt-2">
                     <Button 
-                      className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold"
+                      className="w-full h-11 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-semibold"
                     >
                       {isLogin ? "Sign In" : "Create Account"}
                       <ArrowRight className="w-4 h-4 ml-2" />
@@ -310,24 +329,24 @@ export default function AuthPage() {
 
                 {/* Demo Accounts */}
                 {isLogin && (
-                  <div className="mt-6 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                    <div className="flex items-center gap-2 mb-3">
+                  <div className="mt-5 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                    <div className="flex items-center gap-2 mb-2">
                       <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      <span className="text-sm text-emerald-400 font-medium">Demo Accounts</span>
-                      <span className="text-xs text-muted-foreground">— click to autofill</span>
+                      <span className="text-xs text-emerald-400 font-medium">Demo Accounts</span>
+                      <span className="text-xs text-white/40">— click to autofill</span>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       {demoAccounts.map((demo) => (
                         <button
                           key={demo.email}
                           onClick={() => handleDemoFill(demo.email, demo.password)}
-                          className="w-full flex items-center justify-between p-2 rounded-md bg-secondary/50 hover:bg-secondary transition-colors text-left"
+                          className="w-full flex items-center justify-between p-2 rounded-md bg-white/5 hover:bg-white/10 transition-colors text-left"
                         >
-                          <div>
-                            <span className="text-xs text-muted-foreground">{demo.label}:</span>
-                            <span className="text-sm ml-2">{demo.email}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-white/40">{demo.label}:</span>
+                            <span className="text-xs text-white/80">{demo.email}</span>
                           </div>
-                          <ArrowRight className="w-3 h-3 text-muted-foreground" />
+                          <ArrowRight className="w-3 h-3 text-white/40" />
                         </button>
                       ))}
                     </div>
@@ -335,11 +354,11 @@ export default function AuthPage() {
                 )}
 
                 {!isLogin && (
-                  <p className="text-xs text-muted-foreground text-center mt-5">
+                  <p className="text-xs text-white/40 text-center mt-5">
                     By signing up, you agree to our{" "}
-                    <button className="text-primary hover:underline">Terms</button>
+                    <button className="text-amber-500 hover:underline">Terms</button>
                     {" "}and{" "}
-                    <button className="text-primary hover:underline">Privacy Policy</button>
+                    <button className="text-amber-500 hover:underline">Privacy Policy</button>
                   </p>
                 )}
               </motion.div>
@@ -349,9 +368,9 @@ export default function AuthPage() {
       </div>
 
       {/* Footer Signature */}
-      <footer className="py-4 text-center border-t border-border bg-background">
-        <p className="text-sm text-muted-foreground">
-          Driven by Passion, Built for Impact - <span className="text-foreground font-medium">Swagata Banerjee</span>
+      <footer className="py-4 text-center border-t border-white/5 bg-[#0a0a0f]">
+        <p className="text-sm text-white/40">
+          Driven by Passion, Built for Impact - <span className="text-white/80 font-medium">Swagata Banerjee</span>
         </p>
       </footer>
     </div>
