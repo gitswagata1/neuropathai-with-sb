@@ -1,35 +1,38 @@
-# neuropathai-with-sb
+# NeuroPath AI
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
 
-## Built with v0
+AI-powered neuropathology analysis tool — deep learning for brain tissue classification and visualization. Built with Next.js and deployed on Vercel.
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+## Features
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_An1McoxYoUEYoDb4AlvzkKJ5xkHb)
+- Upload brain tissue images for AI-powered classification
+- Real-time inference with visual heatmap overlays
+- Clean, accessible UI for clinical and research use
+- Auto-deploys from `main` via Vercel
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+git clone https://github.com/gitswagata1/neuropathai-with-sb.git
+cd neuropathai-with-sb
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-## Learn More
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js, TypeScript, Tailwind CSS |
+| AI/ML | Deep learning classification model |
+| Deployment | Vercel (auto-deploy from main) |
 
-To learn more, take a look at the following resources:
+## Author
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
-
-<a href="https://v0.app/chat/api/kiro/clone/gitswagata1/neuropathai-with-sb" alt="Open in Kiro"><img src="https://pdgvvgmkdvyeydso.public.blob.vercel-storage.com/open%20in%20kiro.svg?sanitize=true" /></a>
+**Swagata Banerjee** — B.Tech CSE, VIT Vellore
